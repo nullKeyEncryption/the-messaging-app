@@ -44,7 +44,7 @@ function handler(request, response) {
 
   let filePath = ROOT_DIR + urlObj.pathname
 
-  if(urlObj.pathname.split('/').length() > 2)
+  if(urlObj.pathname.split('/').length > 2)
     filePath = '.' + urlObj.pathname
   
   console.log("REQUEST: " + filePath)
