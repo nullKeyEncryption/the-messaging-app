@@ -42,16 +42,10 @@ function handler(request, response) {
   console.log("PATHNAME: " + urlObj.pathname)
   console.log("METHOD: " + request.method)
 
-  let filePath
-  
-  if (urlObj.pathname == '/styles/styles.css')
-    filePath = './' + urlObj.pathname
+  let filePath = ROOT_DIR + urlObj.pathname
 
-  else if (urlObj.pathname === '/') 
-    filePath = ROOT_DIR + '/index.html'
-
-  else
-    filePath = ROOT_DIR + urlObj.pathname
+  if(urlObj.pathname.split('/').length() > 2)
+    filePath = '.' + urlObj.pathname
   
   console.log("REQUEST: " + filePath)
 
@@ -77,14 +71,16 @@ io.on('connection', function(socket) {
   // Add new socket to the map without a username
   socketMap.set(socket.id, "")
 
+  
   // If a valid username was given to one of the sockets
   socket.on('validated', function(socketID, username){
 
-    socket.emit('serverSays', 'You are connected to CHAT SERVER', false)
+    socket.emit('serverSays', '', 'clear')
     // Set the username for given socket ID in the map
     socketMap.set(socketID, username)
   })
 
+  
   socket.on('clientSays', function(receiversCombined, data, socketID) {
 
     console.log('RECEIVED: ' + data)
