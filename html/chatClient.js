@@ -3,25 +3,37 @@
 const socket = io('http://' + window.document.location.host)
 
 let isUsernameValid = false
+updateAuthenticationButtonVisibility()
 
+
+function setUserValid(val){
+
+  isUsernameValid = val
+}
+
+
+/* 
+Receiving a message from server
+*/
 socket.on('serverSays', function(message, type) {
 
   let msgDiv = document.createElement('div')
 
   msgDiv.textContent = message
 
-  // If the socket is sending the message, create a div with different class for css formatting
+  // If the socket is sending the message, create a div sender tag
   if(type === "sender"){
 
     msgDiv.innerHTML = '<div class="sender">' + message + '</dir>'
   }
 
-  // Create a new div with different class if the message is private
-  else if(type === "private"){
+  // Clear placeholder outputs for recently validated socket
+  else if(type == "clear"){
 
-    msgDiv.innerHTML = '<div class="private">' + message + '</dir>'
+    clearMessages()
   }
 
+  // Create a receiver div if the current socket is receiving the message
   else{
 
     msgDiv.innerHTML = '<div class="receiver">' + message + '</dir>'
@@ -29,40 +41,43 @@ socket.on('serverSays', function(message, type) {
   
   // Send public message
   document.getElementById('messages').appendChild(msgDiv)
+
+  scrollToEnd()
 })
 
-function sendMessage() {
+/*
+Updates the login/signup/logout button visibilities based on user status 
+*/
+function updateAuthenticationButtonVisibility(){
 
-  // Don't do anything if username is not valid
-  if(isUsernameValid === false)
-    return
+  let loginButton = document.getElementById('loginButton');
+  let signupButton = document.getElementById('signupButton');
+  let logoutButton = document.getElementById('logoutButton');
 
-  let combinedMessage = document.getElementById('msgBox').value.trim()
-  if(combinedMessage === '') return //do nothing
-
-  // .map usage from: https://stackoverflow.com/questions/7695997/split-the-sentences-by-and-remove-surrounding-spaces
-  let splittedMessage = combinedMessage.split(":").map(element => element.trim())
-
-  // Message is not private
-  if(splittedMessage.length == 1){
-
-    socket.emit('clientSays', "", splittedMessage, socket.id)
+  if(isUsernameValid){
+    loginButton.style.display = 'none'
+    signupButton.style.display = 'none'
+    logoutButton.style.display = 'inline-block'
   }
-
-  // Message is private
   else{
-
-    let receivers = splittedMessage[0]
-    let message = splittedMessage[1]
-
-    socket.emit('clientSays', receivers, message, socket.id)
+    loginButton.style.display = 'inline-block'
+    signupButton.style.display = 'inline-block'
+    logoutButton.style.display = 'none'
   }
-
-  document.getElementById('msgBox').value = ''
 }
 
 // Send the username and socket ID of the current socket to server
-function sendValidUsernameInfo(username) {
+function sendValidUsernameInfo(username){
 
   socket.emit('validated', socket.id, username)
+}
+
+/*
+Scrolls to the bottom of the chat box if the message height overflows
+*/
+function scrollToEnd(){
+
+  let container = document.getElementById('messages')
+
+  container.scrollTop = container.scrollHeight
 }
