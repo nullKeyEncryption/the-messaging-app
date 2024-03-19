@@ -5,26 +5,47 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>The App</title>
-  <link rel="stylesheet" type="text/css" href="../styles/styles.css">
+  <link rel="stylesheet" type="text/css" href="../styles/main-page-styles.css">
 </head>
 
 <body>
-  <div>
-    <input type='text' placeholder='Enter username' id='username'>
-    <input type='button' id="username_button" value='Connect As'>
+
+  <div class="authenticate">
+    <button type="button" id="loginButton">Log In</button>
+    <button type="button" id="signupButton">Sign Up</button>
+    <button type="button" id="logoutButton">Log Out</button>
   </div>
 
-  <p/>
+  <div class="split-container">
 
-  Messages:
-  <div id='messages'></div>
-  <input type='text' placeholder='Send a message' id='messageBox'>
-  <input type='button' id="send_button" value='Send'>
-  <input type='button' id="clear_button" value='Clear'>
+    <!-- Chat History Container (Left Side) -->
+    <div class="chat-container">
+
+      <h2>Chat History</h2>
+      <div id="chat-history">
+
+        <!-- Global Chat will be at the top and other chats will be added dynamically-->
+        <div class="chat", id="GLOBAL">GLOBAL CHAT</div>
+      </div>
+    </div>
+
+    <!-- Message Container (Right Side) -->
+    <div class="message-container">
+
+      <div id="messages">Log In to Continue</div>
+      
+      <div class="send-message-container">
+        <textarea type="text" id="messageBox" placeholder="Send a message" rows="1"></textarea>
+        <input type='button' id="send_button" value='Send'>
+        <input type='button' id="clear_button" value='Clear'>
+      </div>
+    </div>
+  </div>
 
   <script src="/socket.io/socket.io.js"></script>
   <script src='chatClient.js'></script>
   <script src='eventListeners.js'></script>
   <script src='buttonHandlers.js'></script>
+
 </body>
 </html>
