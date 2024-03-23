@@ -6,12 +6,6 @@ let isUsernameValid = false
 updateAuthenticationButtonVisibility()
 
 
-function setUserValid(val){
-
-  isUsernameValid = val
-}
-
-
 /* 
 Receiving a message from server
 */

@@ -38,12 +38,21 @@ server.listen(PORT) //start http server listening on PORT
 function handler(request, response) {
   //handler for http server requests
   let urlObj = url.parse(request.url, true, false)
+
   console.log('\n============================')
   console.log("PATHNAME: " + urlObj.pathname)
   console.log("METHOD: " + request.method)
 
+  
   let filePath = ROOT_DIR + urlObj.pathname
 
+  // Redirect the client to the chatClient.html page
+  if (urlObj.pathname === '/' || urlObj.pathname === '/index.html') {
+    response.writeHead(302, { 'Location': '/chatClient.html' })
+    response.end()
+    return
+  }
+  
   if(urlObj.pathname.split('/').length > 2)
     filePath = '.' + urlObj.pathname
   

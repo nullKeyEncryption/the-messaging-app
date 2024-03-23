@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Log In | The App</title>
+        <link rel="stylesheet" type="text/css" href="../styles/user-auth-styles.css">
+    </head>
+
+    <body>
+
+        <div class="login-page">
+            <div class="login-modal">
+                <div class="login-modal-header">
+                    <h2>Log In to The App</h2>
+                </div>
+
+                <div class="login-modal-body">
+                    <div class="username-container">
+                        <input type="text" id="username" placeholder="Username" maxlength="35">
+                    </div>
+                    <div class="password-container">
+                        <input type="password" id="password" placeholder="Password">
+                        <span id="toggle-password">Show</span>
+                    </div>
+                </div>
+
+                <div class="login-modal-submit">
+                    <button type="button" id="login-submit-button">Log In</button>
+                    <p id="error-message"></p>
+                    <p>Don't have an account? <a href="signupPage.html">Sign Up</a></p>
+                </div>
+            </div>
+        </div>
+    
+        <script src='eventListeners.js'></script>
+        <script src='buttonHandlers.js'></script>
+
+    </body>
+</html>

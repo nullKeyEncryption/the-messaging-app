@@ -92,3 +92,7 @@ input[type="button"] {
     text-transform: uppercase;
     padding: 10px 5px;
 }
+
+#logoutButton {
+    display: none;
+}

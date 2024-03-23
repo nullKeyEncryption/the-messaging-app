@@ -1,13 +1,15 @@
 
 function userLogin(){
 
-  renderLogicModal()
+  window.location.href = 'loginPage.html'
 }
+
 
 function userSignup(){
 
-  renderLogicModal()
+  window.location.href = 'signupPage.html'
 }
+
 
 function userLogout(){
 
@@ -15,10 +17,6 @@ function userLogout(){
   updateAuthenticationButtonVisibility()
 }
 
-function renderLogicModal(){
-
-  // PLACEHOLDER
-}
 
 function validateUsername() {
 
@@ -54,6 +52,7 @@ function validateUsername() {
     box.rows = Math.floor(box.scrollHeight / 30)
   }
 
+
   /* 
   Sends a message to server for the server to distribute to every valid user
   */
@@ -74,6 +73,7 @@ function validateUsername() {
     box.rows = 1
   }
 
+
   // Clear the messages from users' screen -excluding the message that shows the user is connected to the chat server
   function clearMessages() {
   
@@ -82,7 +82,65 @@ function validateUsername() {
     document.getElementById('messages').innerHTML = "<div class='chat-header'>" + "{PLACEHOLDER}" + "</div>"
   }
 
-  
+
+  function loginRequest() {
+
+    username = document.getElementById('username').value
+    password = document.getElementById('password').value
+
+    invalidFeedback = document.getElementById('error-message')
+
+    invalidFeedback.textContent = ''
+
+    if(!username || username.trim() == '')
+      invalidFeedback.textContent = "Invalid username"
+    else if(!password)
+      invalidFeedback.textContent = "Invalid password"
+    else{
+
+      // ### TODO
+      // Check database for a match
+      // Last Step
+      window.location.href = 'chatClient.html'
+    }
+    
+  }
+
+
+  function signupRequest() {
+    
+    username = document.getElementById('username').value.trim()
+    password = document.getElementById('password').value
+    confirmPassword = document.getElementById('password-confirmation').value
+
+    invalidFeedback = document.getElementById('error-message')
+
+    invalidFeedback.textContent = ''
+    
+    // Check username for allowed characters
+    if(!username || username.trim() == '')
+      invalidFeedback.textContent = "Username can't empty"
+    else if(!/^[a-zA-Z0-9!?\\-_~|=+*.:]+$/.test(username))
+      invalidFeedback.textContent = "Username contains invalid characters"
+
+    // Check if passwords match
+    else if(!password)
+      invalidFeedback.textContent = "You must set a password"
+    else if(password !== confirmPassword)
+      invalidFeedback.textContent = "Passwords do not match"
+    
+    // Valid Input
+    else{
+      // ### TODO
+      // check server for existing username collisions
+
+
+      // finally
+      window.location.href = 'chatClient.html'
+    }
+  }
+
+
   function handleKeyDown(event) {
     const ENTER_KEY = 13
     if (event.keyCode === ENTER_KEY){
