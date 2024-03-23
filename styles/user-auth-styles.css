@@ -52,6 +52,11 @@ a:hover {
   color: #69b1ff;
 }
 
+#error-message {
+
+  color: rgb(214, 7, 7)
+}
+
 .username-container{
   position: relative;
   margin-bottom: 20px;
