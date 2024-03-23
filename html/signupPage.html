@@ -21,19 +21,24 @@
                         <input type="text" id="username" placeholder="Username" maxlength="35">
                     </div>
                     <div class="password-container">
-                        <input type="password" id="password" placeholder="Password">
+                        <input type="password" id="password" placeholder="Password" maxlength="20">
                         <span id="toggle-password">Show</span>
                     </div>
                     <div class="password-container">
-                        <input type="password" id="password-confirmation" placeholder="Confirm Password">
+                        <input type="password" id="password-confirmation" placeholder="Confirm Password" maxlength="20">
                     </div>
                 </div>
 
                 <div class="signup-modal-submit">
-                    <button type="button" id="submit-button">Sign Up</button>
+                    <button type="button" id="signup-submit-button">Sign Up</button>
+                    <p id="error-message"></p>
                     <p>Already have an account? <a href="loginPage.html">Log In</a></p>
                 </div>
             </div>
         </div>
+
+        <script src='eventListeners.js'></script>
+        <script src='buttonHandlers.js'></script>
+        
     </body>
 </html>
