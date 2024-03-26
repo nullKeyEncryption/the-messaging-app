@@ -2,6 +2,8 @@ const server = require('http').createServer(handler)
 const io = require('socket.io')(server) //wrap server app in socket io capability
 const fs = require('fs') //file system to server static files
 const url = require('url'); //to parse url strings
+const db = require('./data/dbHandler')
+
 const PORT = process.env.PORT || 3000 //useful if you want to specify port through environment variable
 
 const ROOT_DIR = 'html' //dir to serve static files from
@@ -78,7 +80,7 @@ function handler(request, response) {
 io.on('connection', function(socket) {
 
   // Add new socket to the map without a username
-  socketMap.set(socket.id, "")
+  socketMap.set("", socket.id)
 
   
   // If a valid username was given to one of the sockets
@@ -86,63 +88,59 @@ io.on('connection', function(socket) {
 
     socket.emit('serverSays', '', 'clear')
     // Set the username for given socket ID in the map
-    socketMap.set(socketID, username)
+    socketMap.set(username, socketID)
   })
 
-  
-  socket.on('clientSays', function(receiversCombined, data, socketID) {
+  socket.on('updateSocketID', (username, socketID) => {
+    socketMap.set(username, socketID)
+    console.log("GETTING" + socketMap.get(username))
+  })
+
+  socket.on('usernameRequest', (username) => {
+
+    db.usernameExists(username, (doesUsernameExist) => {
+
+      socket.emit('usernameResponse', doesUsernameExist)
+    })
+  })
+
+  socket.on('userMatchRequest', (username, password) => {
+
+    db.userExists(username, password, (userExists) => {
+
+      socket.emit('userMatchResponse', userExists)
+    })
+  })
+
+  socket.on('registerUserRequest', (username, password) => {
+
+    db.addUser(username, password, (successful) => {
+
+      socket.emit('registerUserResponse', successful)
+    })
+  })
+
+  socket.on('clientSays', function(data, username) {
 
     console.log('RECEIVED: ' + data)
 
-    // Get the username of the sender
-    let sender = socketMap.get(socketID)
+    // Get the socket.id of the sender
+    let sender = socketMap.get(username)
 
-    // Update data to show sender's username
-    data = sender + ": " + data
+    socketMap.forEach((value, key) => {
 
-    // if the message is not private, broadcast the message to everyone
-    if(receiversCombined === ""){
+      // broadcast the message to everyone who is registered
+      if(key !== ''){
 
-      socketMap.forEach((value, key) => {
-
-        // broadcast the message to everyone who is registered
-        if(value !== ''){
-
-          if(sender === value){
-            io.to(key).emit('serverSays', data, "sender")
-          }
-          else{
-            io.to(key).emit('serverSays', data, "")
-          }
+        // Update data to show sender's username
+        if(sender === value){
+          io.to(value).emit('serverSays', data + " :you", "sender")
         }
-      });
-    }
-
-    // if the message is private, only broadcast it to the receivers
-    else{
-
-      let sentToSender = false // checks if the message is sent to the sender
-
-      // .map usage from: https://stackoverflow.com/questions/7695997/split-the-sentences-by-and-remove-surrounding-spaces
-      let receivers = receiversCombined.split(",").map(element => element.trim())
-
-      receivers.forEach((username, index) => {
-
-        socketMap.forEach((value, key) => {
-
-          // send the message to the original sender if not already
-          if(value === sender && !sentToSender){
-            io.to(key).emit('serverSays', data, "private")
-            sentToSender = true
-          }
-
-          // Check if that username exists
-          if(username === value){
-            io.to(key).emit('serverSays', data, "private")
-          }
-        });
-      });
-    }
+        else{
+          io.to(value).emit('serverSays', username + ": " + data, "")
+        }
+      }
+    })
   })
 
   // Remove socket from map if the socket leaves
