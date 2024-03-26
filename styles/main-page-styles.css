@@ -5,9 +5,22 @@ body {
     padding: 15px;
 }
 
+.authenticate {
+    display: flex;
+    justify-content: flex-end;
+}
+
 .authenticate button {
 
     background-color: yellowgreen;
+    height: fit-content;
+    margin-top: 1.5vh;
+    margin-left: 1vh;
+}
+
+p {
+    font-size: medium;
+    display: inline;
 }
 
 .split-container {
