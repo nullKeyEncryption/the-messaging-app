@@ -2,7 +2,8 @@
 //connect to same host that served the document
 const socket = io('http://' + window.document.location.host)
 
-let isUsernameValid = false
+let isUserValid = sessionStorage.getItem('isUserValid')
+
 updateAuthenticationButtonVisibility()
 
 
@@ -33,9 +34,7 @@ socket.on('serverSays', function(message, type) {
     msgDiv.innerHTML = '<div class="receiver">' + message + '</dir>'
   }
   
-  // Send public message
   document.getElementById('messages').appendChild(msgDiv)
-
   scrollToEnd()
 })
 
@@ -43,12 +42,25 @@ socket.on('serverSays', function(message, type) {
 Updates the login/signup/logout button visibilities based on user status 
 */
 function updateAuthenticationButtonVisibility(){
+  
+  if(!document.getElementById('loginButton'))
+    return
 
-  let loginButton = document.getElementById('loginButton');
-  let signupButton = document.getElementById('signupButton');
-  let logoutButton = document.getElementById('logoutButton');
+  if(!isUserValid || isUserValid !== 'true'){
 
-  if(isUsernameValid){
+    isUserValid = false
+    sessionStorage.setItem('isUserValid', false)
+    document.getElementById('connected-user').textContent = "Not Logged In"
+  }
+  else{
+    document.getElementById('connected-user').textContent = "Logged in as: " + sessionStorage.getItem('username')
+  }
+  
+  let loginButton = document.getElementById('loginButton')
+  let signupButton = document.getElementById('signupButton')
+  let logoutButton = document.getElementById('logoutButton')
+
+  if(isUserValid){
     loginButton.style.display = 'none'
     signupButton.style.display = 'none'
     logoutButton.style.display = 'inline-block'
@@ -60,11 +72,6 @@ function updateAuthenticationButtonVisibility(){
   }
 }
 
-// Send the username and socket ID of the current socket to server
-function sendValidUsernameInfo(username){
-
-  socket.emit('validated', socket.id, username)
-}
 
 /*
 Scrolls to the bottom of the chat box if the message height overflows
